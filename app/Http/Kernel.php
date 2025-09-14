@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     /**
-     * Global HTTP middleware stack.
+     * The application's global HTTP middleware stack.
      *
      * @var array<int, class-string|string>
      */
@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Route middleware groups.
+     * The application's route middleware groups.
      *
      * @var array<string, array<int, class-string|string>>
      */
@@ -30,13 +30,15 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            // ✅ Sanctum hanya perlu di web kalau kamu pakai SPA (React/Vue)
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'api' => [
-            // Sanctum middleware untuk API autentikasi
+            // ✅ Tambahkan Sanctum di sini biar auth:sanctum bisa dipakai
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -44,7 +46,7 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * Individual route middleware.
+     * The application's route middleware.
      *
      * @var array<string, class-string|string>
      */
@@ -53,8 +55,5 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
-        // Kalau kamu mau bikin middleware custom bisa daftar di sini
-        // 'role' => \App\Http\Middleware\CheckRole::class,
     ];
 }
