@@ -13,7 +13,28 @@ return new class extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id();
+
+            // Relasi ke user
+            $table->foreignId('user_id')
+                  ->constrained('users')
+                  ->cascadeOnDelete();
+
+            // Relasi ke ujian
+            $table->foreignId('exam_id')
+                  ->constrained('exams')
+                  ->cascadeOnDelete();
+
+            // Nilai akhir ujian
+            $table->unsignedInteger('score')->default(0);
+
+            // Waktu ujian dikerjakan
+            $table->timestamp('taken_at')->useCurrent();
+
             $table->timestamps();
+
+            // OPTIONAL (tapi sangat bagus):
+            // user tidak boleh punya 2 hasil untuk ujian yang sama
+            $table->unique(['user_id', 'exam_id']);
         });
     }
 

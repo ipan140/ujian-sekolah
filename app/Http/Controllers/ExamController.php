@@ -7,23 +7,49 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
-    // GET /api/exams
+    /**
+     * GET /api/exams
+     * Ambil semua ujian
+     */
     public function index()
     {
-        return response()->json(Exam::all());
+        return response()->json([
+            'status' => 'success',
+            'data'   => Exam::all()
+        ]);
     }
 
-    // GET /api/exams/{id}
-    public function show($id)
+    /**
+     * GET /api/exams/{exam}
+     * Detail ujian (pakai route model binding)
+     */
+    public function show(Exam $exam)
     {
-        $exam = Exam::findOrFail($id);
-        return response()->json($exam);
+        return response()->json([
+            'status' => 'success',
+            'data'   => $exam
+        ]);
     }
 
-    // POST /api/exams (opsional, kalau admin mau tambah ujian)
+    /**
+     * POST /api/exams
+     * Membuat ujian baru (hanya admin)
+     */
     public function store(Request $request)
     {
-        $exam = Exam::create($request->all());
-        return response()->json($exam, 201);
+        // Validasi dulu
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration'    => 'required|integer|min:1',
+        ]);
+
+        // Simpan
+        $exam = Exam::create($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $exam
+        ], 201);
     }
 }

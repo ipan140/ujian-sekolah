@@ -7,28 +7,37 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ExamResultController;
 
 // ======================
-// AUTH ROUTES (Public)
+// PUBLIC ROUTES
 // ======================
 
-Route::get('/test-api', function () {
-    return response()->json(['status' => 'API works']);
-});
+Route::get('/test-api', fn () =>
+    response()->json(['status' => 'API works'])
+);
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+
 // ===========================
-// ROUTES DILINDUNGI SANCTUM
+// PROTECTED ROUTES (SANCTUM)
 // ===========================
 Route::middleware('auth:sanctum')->group(function () {
+
+    // AUTH
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/exams', [ExamController::class, 'index']);
-    Route::get('/exams/{id}', [ExamController::class, 'show']);
-    Route::post('/exams', [ExamController::class, 'store']);
+    // EXAM
+    Route::get('/exams', [ExamController::class, 'index']);       // Semua ujian
+    Route::post('/exams', [ExamController::class, 'store']);      // Buat ujian
+    Route::get('/exams/{exam}', [ExamController::class, 'show']); // Detail ujian
 
-    Route::get('/exams/{id}/questions', [QuestionController::class, 'index']);
+    // QUESTION BY EXAM
+    Route::get('/exams/{exam}/questions', [QuestionController::class, 'index']);
 
-    Route::post('/exams/{id}/submit', [ExamResultController::class, 'store']);
-    Route::get('/users/{id}/results', [ExamResultController::class, 'userResults']);
+    // SUBMIT EXAM RESULT
+    Route::post('/exams/{exam}/submit', [ExamResultController::class, 'store']);
+
+    // USER RESULT HISTORY
+    Route::get('/users/{user}/results', [ExamResultController::class, 'userResults']);
 });

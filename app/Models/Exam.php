@@ -11,8 +11,9 @@ class Exam extends Model
 
     protected $fillable = [
         'title',
-        'description',
-        'duration', // dalam menit
+        'category',
+        'grade',
+        'duration',
     ];
 
     public function questions()

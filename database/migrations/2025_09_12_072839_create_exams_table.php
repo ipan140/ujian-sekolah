@@ -13,6 +13,24 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
+
+            // Nama ujian
+            $table->string('title');
+
+            // Kategori ujian (4 kategori)
+            $table->enum('category', [
+                'matematika',
+                'ipa',
+                'ips',
+                'bahasa_inggris',
+            ]);
+
+            // Kelas (opsional)
+            $table->string('grade')->nullable();
+
+            // Durasi ujian dalam menit
+            $table->unsignedInteger('duration')->default(30);
+
             $table->timestamps();
         });
     }

@@ -13,12 +13,7 @@ class ExamResult extends Model
         'user_id',
         'exam_id',
         'score',
-        'total',
-        'answers', // simpan JSON jawaban user
-    ];
-
-    protected $casts = [
-        'answers' => 'array',
+        'taken_at',
     ];
 
     public function exam()

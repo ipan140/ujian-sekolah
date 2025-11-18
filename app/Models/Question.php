@@ -11,13 +11,12 @@ class Question extends Model
 
     protected $fillable = [
         'exam_id',
-        'question_text',
-        'options',       // disimpan JSON → ["A", "B", "C", "D"]
-        'answer_index',  // integer index jawaban benar
-    ];
-
-    protected $casts = [
-        'options' => 'array', // biar otomatis jadi array di Laravel
+        'question',
+        'option_a',
+        'option_b',
+        'option_c',
+        'option_d',
+        'correct_answer',
     ];
 
     public function exam()
