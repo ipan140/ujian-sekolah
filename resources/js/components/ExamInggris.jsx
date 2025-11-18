@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Exam() {
-    const [timeLeft, setTimeLeft] = useState(130 * 60);
+    const [timeLeft, setTimeLeft] = useState(130 * 60); // Time in seconds
     const [answers, setAnswers] = useState({});
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate(); // Initialize navigate hook here
 
     const questions = [
         {
@@ -357,18 +359,21 @@ export default function Exam() {
     const handleSubmit = () => {
         let score = 0;
         questions.forEach((q) => {
-            if (answers[q.id] === q.answer) score++;
+            if (answers[q.id] === q.answer) score += 2; // 2 points per question, total 50 questions = 100
         });
 
         Swal.fire({
             title: "🎉 Ujian Selesai!",
             html: `
-        <h2>Skor Kamu:</h2>
-        <h1 style="font-size:40px; margin-top:10px; color:#1d4ed8">${score}/${questions.length}</h1>
-      `,
+                <h2>Skor Kamu:</h2>
+                <h1 style="font-size:40px; margin-top:10px; color:#1d4ed8">${score}/100</h1>
+            `,
             icon: "success",
             confirmButtonText: "OK",
             confirmButtonColor: "#2563eb",
+        }).then(() => {
+            // Navigate to the dashboard after clicking OK
+            navigate("/dashboard");
         });
     };
 

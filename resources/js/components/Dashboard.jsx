@@ -5,6 +5,15 @@ import { motion } from "framer-motion";
 export default function Dashboard() {
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        // Clear any stored authentication data (if needed)
+        localStorage.removeItem("userToken"); // Example: clearing user token from localStorage
+        sessionStorage.removeItem("userToken"); // Example: clearing sessionStorage if used
+        
+        // Redirect the user to the register page after logout
+        navigate("/");
+    };
+
     return (
         <div className="flex h-screen justify-center items-center bg-gradient-to-br from-indigo-700 via-blue-600 to-cyan-500 p-6">
             <motion.div
@@ -91,6 +100,18 @@ export default function Dashboard() {
                         className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-bold text-xl py-8 rounded-2xl shadow-lg"
                     >
                         🇬🇧 Ujian Bahasa Inggris
+                    </motion.button>
+                </div>
+
+                {/* Logout Button */}
+                <div className="mt-10">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleLogout}
+                        className="w-full py-3 bg-red-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-red-600"
+                    >
+                        🚪 Logout
                     </motion.button>
                 </div>
             </motion.div>

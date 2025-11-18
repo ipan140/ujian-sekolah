@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Exam() {
-    const [timeLeft, setTimeLeft] = useState(130 * 60);
+    const [timeLeft, setTimeLeft] = useState(130 * 60); // Time in seconds
     const [answers, setAnswers] = useState({});
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate(); // Initialize navigate hook here
 
-    // ==============================
-    // DATA SOAL
-    // ==============================
     const mathQuestions = [
         {
             id: 1,
@@ -325,9 +324,9 @@ export default function Exam() {
         },
     ];
 
-    // ==========================================
+    // ==========================
     // TIMER
-    // ==========================================
+    // ==========================
     useEffect(() => {
         if (timeLeft === 0) {
             handleSubmit();
@@ -342,7 +341,7 @@ export default function Exam() {
     }, [timeLeft]);
 
     const handleSelect = (qid, option) => {
-        setAnswers((prev) => ({ ...prev, [qid]: option }));
+        setAnswers({ ...answers, [qid]: option });
     };
 
     const handleNext = () => {
@@ -357,19 +356,27 @@ export default function Exam() {
         }
     };
 
+    // ==========================
+    // SWEET ALERT HASIL
+    // ==========================
     const handleSubmit = () => {
         let score = 0;
         mathQuestions.forEach((q) => {
-            if (answers[q.id] === q.answer) score++;
+            if (answers[q.id] === q.answer) score += 2; // 2 points per question, total 50 questions = 100
         });
 
         Swal.fire({
             title: "🎉 Ujian Selesai!",
-            html: `<h2>Skor Kamu:</h2>
-                   <h1 style="font-size:40px; margin-top:10px; color:#1d4ed8">${score}/${mathQuestions.length}</h1>`,
+            html: `
+                <h2>Skor Kamu:</h2>
+                <h1 style="font-size:40px; margin-top:10px; color:#1d4ed8">${score}/100</h1>
+            `,
             icon: "success",
             confirmButtonText: "OK",
             confirmButtonColor: "#2563eb",
+        }).then(() => {
+            // Navigate to the dashboard after clicking OK
+            navigate("/dashboard");
         });
     };
 
@@ -381,12 +388,9 @@ export default function Exam() {
 
     const currentQuestion = mathQuestions[currentIndex];
 
-    // ==========================================
-    // UI
-    // ==========================================
     return (
         <div className="flex justify-center items-start min-h-screen bg-gradient-to-r from-indigo-500 to-blue-600 p-6 gap-6">
-            {/* PANEL SOAL */}
+            {/* Panel Soal */}
             <div className="bg-white shadow-2xl rounded-2xl p-8 w-[700px]">
                 <div className="text-center mb-6">
                     <span className="text-xl font-bold text-gray-700">
@@ -408,9 +412,9 @@ export default function Exam() {
                 </h2>
 
                 <div className="space-y-3">
-                    {currentQuestion.options.map((opt, idx) => (
+                    {currentQuestion.options.map((opt) => (
                         <label
-                            key={idx} // FIX: PAKAI INDEX UNTUK MENGHINDARI DUPLIKAT KEY
+                            key={opt}
                             className={`flex items-center p-3 border rounded-xl cursor-pointer transition ${
                                 answers[currentQuestion.id] === opt
                                     ? "bg-blue-100 border-blue-500"
@@ -432,6 +436,7 @@ export default function Exam() {
                     ))}
                 </div>
 
+                {/* Navigasi */}
                 <div className="flex justify-between items-center mt-8">
                     <button
                         onClick={handlePrev}
@@ -463,7 +468,7 @@ export default function Exam() {
                 </div>
             </div>
 
-            {/* PANEL STATUS */}
+            {/* Panel Status */}
             <div className="bg-white shadow-2xl rounded-2xl p-6 w-[250px] h-fit">
                 <h3 className="text-lg font-bold text-gray-700 mb-4 text-center">
                     📋 Status Soal

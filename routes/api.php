@@ -10,7 +10,9 @@ use App\Http\Controllers\ExamResultController;
 // PUBLIC ROUTES
 // ======================
 
-Route::get('/test-api', fn () =>
+Route::get(
+    '/test-api',
+    fn() =>
     response()->json(['status' => 'API works'])
 );
 
@@ -28,16 +30,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // EXAM
-    Route::get('/exams', [ExamController::class, 'index']);       // Semua ujian
-    Route::post('/exams', [ExamController::class, 'store']);      // Buat ujian
-    Route::get('/exams/{exam}', [ExamController::class, 'show']); // Detail ujian
+    Route::get('/exams', [ExamController::class, 'index']);
+    Route::post('/exams', [ExamController::class, 'store']);
+    Route::get('/exams/{exam}', [ExamController::class, 'show']);
+    Route::put('/exams/{exam}', [ExamController::class, 'update']);
+    Route::delete('/exams/{exam}', [ExamController::class, 'destroy']);
 
-    // QUESTION BY EXAM
-    Route::get('/exams/{exam}/questions', [QuestionController::class, 'index']);
-
-    // SUBMIT EXAM RESULT
-    Route::post('/exams/{exam}/submit', [ExamResultController::class, 'store']);
-
-    // USER RESULT HISTORY
-    Route::get('/users/{user}/results', [ExamResultController::class, 'userResults']);
+    Route::get('/exams/{id}/questions', [ExamController::class, 'getQuestions']);
 });
